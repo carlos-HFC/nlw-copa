@@ -2,8 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
+generator markdown {
+  provider = "prisma-markdown"
+  title    = "NLW Copa"
+  output   = "./ERD.md"
 }
 
 datasource db {
@@ -11,11 +13,212 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//-----------------------------------------------------------
+// POOLS
+//-----------------------------------------------------------
+/// Bolão.
+///
+/// Todo bolão realizado pelos usuários participantes.
+///
+/// @namespace Pools
+/// @author Carlos
 model Pool {
-  id        String   @id @default(cuid())
-  title     String
-  code      String
+  //----
+  // COLUMNS
+  //----
+  /// Chave primária.
+  ///
+  /// @format cuid
+  id String @id @default(cuid())
+
+  /// ID do dono do bolão {@link users.id}
+  ///
+  /// @format cuid
+  ownerId String?
+
+  /// Título do bolão
+  title String
+
+  /// Código para o bolão
+  code String
+
+  /// Data de criação
   createdAt DateTime @default(now())
 
+  //----
+  // RELATIONS
+  //----
+  /// Lista de participantes do bolão
+  participants Participant[]
+
+  /// Informações do dono do bolão
+  owner User? @relation(fields: [ownerId], references: [id])
+
   @@unique([code])
+}
+
+//-----------------------------------------------------------
+// PARTICIPANTS
+//-----------------------------------------------------------
+/// Participantes.
+///
+/// Armazenar os participantes dos bolões.
+///
+/// @namespace Participants
+/// @author Carlos
+model Participant {
+  //----
+  // COLUMNS
+  //----
+  /// Chave primária.
+  ///
+  /// @format cuid
+  id String @id @default(cuid())
+
+  /// ID do usuário participante {@link users.id}
+  ///
+  /// @format cuid
+  userId String
+
+  /// ID do bolão {@link pools.id}
+  ///
+  /// @format cuid
+  poolId String
+
+  //----
+  // RELATIONS
+  //----
+  /// Lista de palpites
+  guesses Guess[]
+
+  /// Informações do usuário participante
+  user User @relation(fields: [userId], references: [id])
+
+  /// Informações do bolão
+  pool Pool @relation(fields: [poolId], references: [id])
+
+  @@unique([userId, poolId])
+}
+
+//-----------------------------------------------------------
+// USERS
+//-----------------------------------------------------------
+/// Usuários.
+///
+/// Armazenar os usuários.
+///
+/// @namespace Users
+/// @author Carlos
+model User {
+  //----
+  // COLUMNS
+  //----
+  /// Chave primária.
+  ///
+  /// @format cuid
+  id String @id @default(cuid())
+
+  /// Nome do usuário
+  name String
+
+  /// E-mail do usuário
+  email String
+
+  /// URL do avatar do usuário
+  avatarUrl String?
+
+  /// Data de criação
+  createdAt DateTime @default(now())
+
+  //----
+  // RELATIONS
+  //----
+  /// Lista de bolões que o usuário está participanto
+  participatingAt Participant[]
+
+  /// Lista de bolões que o usuário é dono
+  ownPools Pool[]
+
+  @@unique([email])
+}
+
+//-----------------------------------------------------------
+// GAMES
+//-----------------------------------------------------------
+/// Jogos.
+///
+/// Armazenar os jogos da copa.
+///
+/// @namespace Games
+/// @author Carlos
+model Game {
+  //----
+  // COLUMNS
+  //----
+  /// Chave primária.
+  ///
+  /// @format cuid
+  id String @id @default(cuid())
+
+  /// Data do jogo
+  date DateTime
+
+  /// Código do time mandante
+  firstTeamCountryCode String
+
+  /// Código do time visitante
+  secondTeamCountryCode String
+
+  //----
+  // RELATIONS
+  //----
+  /// Lista de palpites
+  guesses Guess[]
+}
+
+//-----------------------------------------------------------
+// GUESSES
+//-----------------------------------------------------------
+/// Palpites.
+///
+/// Armazenar de palpites.
+///
+/// @namespace Guesses
+/// @author Carlos
+model Guess {
+  //----
+  // COLUMNS
+  //----
+  /// Chave primária.
+  ///
+  /// @format cuid
+  id String @id @default(cuid())
+
+  /// ID do jogo {@link games.id}
+  ///
+  /// @format cuid
+  gameId String
+
+  /// ID do usuário participante {@link participants.id}
+  ///
+  /// @format cuid
+  participantId String
+
+  /// Gols marcados pelo time mandante
+  firstTeamPoints Int
+
+  /// Gols marcados pelo time visitante
+  secondTeamPoints Int
+
+  /// Data do jogo
+  createdAt DateTime @default(now())
+
+  //----
+  // RELATIONS
+  //----
+  /// Informações do jogo
+  game Game @relation(fields: [gameId], references: [id])
+
+  /// Informações do participante
+  participant Participant @relation(fields: [participantId], references: [id])
 }
