@@ -58,6 +58,7 @@ Armazenar os participantes dos bolões.
 erDiagram
 "User" {
   String id PK
+  String googleId UK "nullable"
   String name
   String email UK
   String avatarUrl "nullable"
@@ -72,6 +73,7 @@ Armazenar os usuários.
 
 **Properties**
   - `id`: Chave primária.
+  - `googleId`: ID do usuáio no Google 
   - `name`: Nome do usuário
   - `email`: E-mail do usuário
   - `avatarUrl`: URL do avatar do usuário

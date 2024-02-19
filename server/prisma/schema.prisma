@@ -118,11 +118,14 @@ model User {
   /// @format cuid
   id String @id @default(cuid())
 
+  /// ID do usuáio no Google 
+  googleId String? @unique
+
   /// Nome do usuário
   name String
 
   /// E-mail do usuário
-  email String
+  email String @unique
 
   /// URL do avatar do usuário
   avatarUrl String?
@@ -138,8 +141,6 @@ model User {
 
   /// Lista de bolões que o usuário é dono
   ownPolls Poll[]
-
-  @@unique([email])
 }
 
 //-----------------------------------------------------------
@@ -221,4 +222,6 @@ model Guess {
 
   /// Informações do participante
   participant Participant @relation(fields: [participantId], references: [id])
+
+  @@unique([gameId, participantId])
 }
