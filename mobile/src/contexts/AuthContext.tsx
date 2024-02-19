@@ -1,7 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+
+import { api } from "@/services/api";
 
 interface AuthContextProps {
   isUserLoading: boolean;
@@ -27,13 +30,44 @@ export function AuthContextProvider(props: Readonly<PropsWithChildren>) {
   });
 
   useEffect(() => {
+    getUserInStorage();
+  }, []);
+
+  useEffect(() => {
     if (response?.type === 'success' && response.authentication.accessToken) {
       signInWithGoogle(response.authentication.accessToken);
     }
   }, [response]);
 
-  async function signInWithGoogle(token: string) {
-    console.log('token', token);
+  async function getUserInStorage() {
+    const data = await AsyncStorage.getItem("user");
+
+    setUser(JSON.parse(data));
+  }
+
+  async function saveUserInStorage(data: User) {
+    setUser(data);
+    await AsyncStorage.setItem("user", JSON.stringify(data));
+  }
+
+  async function signInWithGoogle(access_token: string) {
+    try {
+      setIsUserLoading(true);
+
+      const tokenResponse = await api.post('/users', {
+        access_token
+      });
+
+      api.defaults.headers.common.Authorization = `Bearer ${tokenResponse.data.token}`;
+
+      const userInfoResponse = await api.get("/me");
+
+      saveUserInStorage(userInfoResponse.data.user);
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsUserLoading(false);
+    }
   }
 
   async function signIn() {

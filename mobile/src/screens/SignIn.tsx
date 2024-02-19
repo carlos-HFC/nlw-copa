@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Logo from '@/assets/logo.svg';
 
 export function Signin() {
-  const { signIn } = useAuth();
+  const { signIn, isUserLoading } = useAuth();
 
   return (
     <Center
@@ -27,6 +27,10 @@ export function Signin() {
         leftIcon={<Icon as={Fontisto} name={"google"} color={"white"} size={"md"} />}
         mt={12}
         onPress={signIn}
+        isLoading={isUserLoading}
+        _loading={{
+          _spinner: { color: "white" }
+        }}
       />
 
       <Text
