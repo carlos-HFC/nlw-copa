@@ -5,8 +5,8 @@ import { env } from "@/env/env";
 
 import { countGuesses } from "./routes/count-guesses";
 import { countUsers } from "./routes/count-users";
-import { createPool } from "./routes/create-pool";
-import { countPools } from "./routes/count-pools";
+import { createPoll } from "./routes/create-poll";
+import { countPolls } from "./routes/count-polls";
 
 const app = fastify({
   logger: true
@@ -16,10 +16,10 @@ app.register(cors, {
   origin: "*"
 });
 
-app.register(createPool);
+app.register(createPoll);
 app.register(countUsers);
 app.register(countGuesses);
-app.register(countPools);
+app.register(countPolls);
 
 app.listen({
   port: env.PORT,

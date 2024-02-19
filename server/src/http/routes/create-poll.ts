@@ -1,21 +1,21 @@
 import { FastifyInstance } from "fastify";
+import ShortUniqueId from "short-unique-id";
 import z from "zod";
 
 import { prisma } from "@/lib/prisma";
-import ShortUniqueId from "short-unique-id";
 
-export async function createPool(app: FastifyInstance) {
-  app.post('/pools', async (request, reply) => {
-    const createPoolBody = z.object({
+export async function createPoll(app: FastifyInstance) {
+  app.post('/polls', async (request, reply) => {
+    const createPollBody = z.object({
       title: z.string(),
     });
 
-    const { title } = createPoolBody.parse(request.body);
+    const { title } = createPollBody.parse(request.body);
 
     const generate = new ShortUniqueId({ length: 6 });
     const code = generate.rnd().toUpperCase();
 
-    await prisma.pool.create({
+    await prisma.poll.create({
       data: {
         title,
         code

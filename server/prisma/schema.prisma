@@ -14,15 +14,15 @@ datasource db {
 }
 
 //-----------------------------------------------------------
-// POOLS
+// POLLS
 //-----------------------------------------------------------
 /// Bolão.
 ///
 /// Todo bolão realizado pelos usuários participantes.
 ///
-/// @namespace Pools
+/// @namespace Polls
 /// @author Carlos
-model Pool {
+model Poll {
   //----
   // COLUMNS
   //----
@@ -80,10 +80,10 @@ model Participant {
   /// @format cuid
   userId String
 
-  /// ID do bolão {@link pools.id}
+  /// ID do bolão {@link polls.id}
   ///
   /// @format cuid
-  poolId String
+  pollId String
 
   //----
   // RELATIONS
@@ -95,9 +95,9 @@ model Participant {
   user User @relation(fields: [userId], references: [id])
 
   /// Informações do bolão
-  pool Pool @relation(fields: [poolId], references: [id])
+  poll Poll @relation(fields: [pollId], references: [id])
 
-  @@unique([userId, poolId])
+  @@unique([userId, pollId])
 }
 
 //-----------------------------------------------------------
@@ -137,7 +137,7 @@ model User {
   participatingAt Participant[]
 
   /// Lista de bolões que o usuário é dono
-  ownPools Pool[]
+  ownPolls Poll[]
 
   @@unique([email])
 }
