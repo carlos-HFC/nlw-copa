@@ -3,12 +3,8 @@ import { NativeBaseProvider, StatusBar } from 'native-base';
 
 import { Loading } from "@/components/Loading";
 
-import { FindPool } from "@/screens/FindPool";
-import { NewPool } from "@/screens/NewPool";
-import { Pools } from "@/screens/Pools";
-import { Signin } from "@/screens/SignIn";
-
 import { AuthContextProvider } from "@/contexts/AuthContext";
+import { Routes } from "@/routes";
 
 import { THEME } from "@/styles/theme";
 
@@ -29,7 +25,7 @@ export default function App() {
         />
         {!isFontsLoaded
           ? <Loading />
-          : <Pools />}
+          : <Routes />}
       </AuthContextProvider>
     </NativeBaseProvider>
   );

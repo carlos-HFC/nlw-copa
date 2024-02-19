@@ -6,7 +6,7 @@ import { Input } from "@/components/Input";
 
 import Logo from '@/assets/logo.svg';
 
-export function NewPool() {
+export function NewPoll() {
   return (
     <VStack
       flex={1}
