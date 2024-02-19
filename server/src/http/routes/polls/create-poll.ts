@@ -15,10 +15,28 @@ export async function createPoll(app: FastifyInstance) {
     const generate = new ShortUniqueId({ length: 6 });
     const code = generate.rnd().toUpperCase();
 
+    let ownerId: string | null = null;
+
+    try {
+      await request.jwtVerify();
+
+      ownerId = request.user.sub;
+    } catch (error) {
+      ownerId = null;
+    }
+
     await prisma.poll.create({
       data: {
         title,
-        code
+        code,
+        ownerId,
+        ...(ownerId && {
+          participants: {
+            create: {
+              userId: ownerId
+            }
+          }
+        })
       }
     });
 
