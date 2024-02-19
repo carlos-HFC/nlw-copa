@@ -1,10 +1,10 @@
 import { Row, Text, Pressable } from 'native-base';
 
-interface EmptyMyPoolListProps {
+interface EmptyMyPollListProps {
   code: string;
 }
 
-export function EmptyMyPoolList({ code }: EmptyMyPoolListProps) {
+export function EmptyMyPollList({ code }: EmptyMyPollListProps) {
   return (
     <Row
       flexWrap="wrap"

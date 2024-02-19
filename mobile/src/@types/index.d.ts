@@ -24,7 +24,7 @@ type Participant = {
   user: User;
 };
 
-type Pool = {
+type Poll = {
   id: string;
   code: string;
   title: string;
