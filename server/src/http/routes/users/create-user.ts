@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/prisma";
 import { FastifyInstance } from "fastify";
 import z from "zod";
+
+import { prisma } from "@/lib/prisma";
 
 export async function createUser(app: FastifyInstance) {
   app.post("/users", async (request, reply) => {
@@ -16,7 +17,6 @@ export async function createUser(app: FastifyInstance) {
       }
     });
 
-    console.log(userResponse);
     const userData = await userResponse.json();
 
     const userInfoSchema = z.object({
