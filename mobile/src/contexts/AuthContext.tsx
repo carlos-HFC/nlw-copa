@@ -23,8 +23,7 @@ export function AuthContextProvider(props: Readonly<PropsWithChildren>) {
   const [user, setUser] = useState({} as User);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: "",
-    clientSecret: "",
+    clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
     redirectUri: AuthSession.makeRedirectUri(),
     scopes: ['profile', 'email']
   });
@@ -58,7 +57,7 @@ export function AuthContextProvider(props: Readonly<PropsWithChildren>) {
         access_token
       });
 
-      api.defaults.headers.common.Authorization = `Bearer ${tokenResponse.data.token}`;
+      await AsyncStorage.setItem("token", tokenResponse.data.token);
 
       const userInfoResponse = await api.get("/me");
 
