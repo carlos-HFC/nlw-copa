@@ -1,13 +1,14 @@
 import { Octicons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { FlatList, Icon, VStack, useToast } from "native-base";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Button } from "@/components/Button";
+import { EmptyPollList } from "@/components/EmptyPollList";
 import { Header } from "@/components/Header";
+import { Loading } from "@/components/Loading";
 import { PollCard } from "@/components/PollCard";
 
-import { useAuth } from "@/contexts/AuthContext";
 import { getPolls } from "@/services/data/get-polls";
 
 export function Polls() {
@@ -17,9 +18,9 @@ export function Polls() {
   const [isLoading, setIsLoading] = useState(true);
   const [polls, setPolls] = useState<Poll[]>([]);
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     fetchPolls();
-  }, []);
+  }, []));
 
   async function fetchPolls() {
     try {
@@ -61,11 +62,23 @@ export function Polls() {
         />
       </VStack>
 
-      <FlatList
-        data={polls}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <PollCard data={item} />}
-      />
+      {isLoading
+        ? <Loading />
+        : <FlatList
+          data={polls}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <PollCard
+              data={item}
+              onPress={() => navigation.navigate("details", { id: item.id })}
+            />
+          )}
+          px={5}
+          showsVerticalScrollIndicator={false}
+          _contentContainerStyle={{ pb: 97 }}
+          ListEmptyComponent={EmptyPollList}
+        />
+      }
     </VStack>
   );
 }
