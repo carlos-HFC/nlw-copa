@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
 
+import { Details } from "@/screens/Details";
+import { FindPoll } from "@/screens/FindPoll";
 import { NewPoll } from "@/screens/NewPoll";
 import { Polls } from "@/screens/Polls";
-import { FindPoll } from "@/screens/FindPoll";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -57,6 +58,14 @@ export function AppRoutes() {
       <Screen
         name="find"
         component={FindPoll}
+        options={{
+          tabBarButton: () => void 0
+        }}
+      />
+
+      <Screen
+        name="details"
+        component={Details}
         options={{
           tabBarButton: () => void 0
         }}

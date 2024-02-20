@@ -17,6 +17,7 @@ type Game = {
   firstTeamCountryCode: string;
   secondTeamCountryCode: string;
   guess: null | Guess;
+  date: Date;
 };
 
 type Participant = {

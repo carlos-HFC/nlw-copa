@@ -22,7 +22,7 @@ export function AuthContextProvider(props: Readonly<PropsWithChildren>) {
   const [isUserLoading, setIsUserLoading] = useState(false);
   const [user, setUser] = useState({} as User);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [, response, promptAsync] = Google.useAuthRequest({
     clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
     redirectUri: AuthSession.makeRedirectUri(),
     scopes: ['profile', 'email']
@@ -75,7 +75,6 @@ export function AuthContextProvider(props: Readonly<PropsWithChildren>) {
     try {
       await promptAsync();
     } catch (error) {
-      console.log(error);
       throw error;
     } finally {
       setIsUserLoading(false);

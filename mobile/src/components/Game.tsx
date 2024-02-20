@@ -1,8 +1,10 @@
 import { Fontisto } from '@expo/vector-icons';
+import { getName } from 'country-list';
+import { format, setDefaultOptions } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { Button, HStack, Text, useTheme, VStack } from 'native-base';
-// import { getName } from 'country-list';
 
-// import { Team } from './Team';
+import { Team } from './Team';
 
 interface GameProps {
   data: Game;
@@ -10,6 +12,10 @@ interface GameProps {
   setFirstTeamPoints: (value: string) => void;
   setSecondTeamPoints: (value: string) => void;
 };
+
+setDefaultOptions({
+  locale: ptBR
+});
 
 export function Game({ data, setFirstTeamPoints, setSecondTeamPoints, onGuessConfirm }: GameProps) {
   const { colors, sizes } = useTheme();
@@ -26,19 +32,19 @@ export function Game({ data, setFirstTeamPoints, setSecondTeamPoints, onGuessCon
       p={4}
     >
       <Text color="gray.100" fontFamily="heading" fontSize="sm">
-        {/* {getName(data.firstTeamCountryCode)} vs. {getName(data.secondTeamCountryCode)} */}
+        {getName(data.firstTeamCountryCode)} vs. {getName(data.secondTeamCountryCode)}
       </Text>
 
       <Text color="gray.200" fontSize="xs">
-        22 de Novembro de 2022 às 16:00h
+        {format(data.date, "dd 'de' MMMM 'de' yyyy 'às' HH:mm")}
       </Text>
 
       <HStack mt={4} w="full" justifyContent="space-between" alignItems="center">
-        {/* <Team
+        <Team
           code={data.firstTeamCountryCode}
           position="right"
           onChangeText={setFirstTeamPoints}
-        /> */}
+        />
 
         <Fontisto
           name="close"
@@ -46,11 +52,11 @@ export function Game({ data, setFirstTeamPoints, setSecondTeamPoints, onGuessCon
           size={sizes[6]}
         />
 
-        {/* <Team
+        <Team
           code={data.secondTeamCountryCode}
           position="left"
           onChangeText={setSecondTeamPoints}
-        /> */}
+        />
       </HStack>
 
       {!data.guess && (
